@@ -24,7 +24,7 @@ namespace QuickMirrorToggle
             _gameScenesManager.transitionDidFinishEvent += GameScenesManager_transitionDidFinishEvent;
         }
 
-        private void GameScenesManager_transitionDidFinishEvent(GameScenesManager.SceneTransitionType arg1, ScenesTransitionSetupDataSO SceneSetupData, DiContainer arg3)
+        private void GameScenesManager_transitionDidFinishEvent(GameScenesManager.SceneTransitionType arg1, ScenesTransitionSetupData sceneSetupData, DiContainer arg3)
         {
             SetMirrorState(_config.MirrorState);
         }

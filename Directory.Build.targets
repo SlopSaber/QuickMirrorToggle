@@ -52,7 +52,7 @@
 	</Target>
 	
 	<!-- Target for Release configuration -->
-	<Target Name="CopyDllToReleaseDirectory" AfterTargets="CopyToPlugins" Condition="'$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release Final'">
+	<Target Name="CopyDllToReleaseDirectory" AfterTargets="CopyToPlugins" Condition="('$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release Final') And '$(DisableReleaseCopy)' != 'true'">
 		<PropertyGroup>
 			<DestinationRoot>G:\WebStatic\dirlist\SelfReleases\Build</DestinationRoot>
 			<BeatSaberDirName>$([System.IO.Path]::GetFileName($(BeatSaberDir)))</BeatSaberDirName>
