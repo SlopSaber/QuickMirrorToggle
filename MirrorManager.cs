@@ -7,12 +7,21 @@ namespace QuickMirrorToggle
 {
     internal class MirrorManager : IInitializable, IDisposable
     {
-        [Inject] private readonly SettingsManager _settingsManager;
-        [Inject] private readonly SettingsApplicatorSO _settingsApplicator;
-        [Inject] private readonly GameScenesManager _gameScenesManager;
-        [Inject] private readonly IFileStorage _fileStorage;
-        [Inject] private readonly QMTConfig _config;
-        [Inject] private readonly SiraLog _logger;
+        private readonly SettingsManager _settingsManager;
+        private readonly SettingsApplicatorSO _settingsApplicator;
+        private readonly GameScenesManager _gameScenesManager;
+        private readonly QMTConfig _config;
+        private readonly SiraLog _logger;
+
+        public MirrorManager(SettingsManager settingsManager, SettingsApplicatorSO settingsApplicator,
+            GameScenesManager gameScenesManager, QMTConfig config, SiraLog logger)
+        {
+            _settingsManager = settingsManager;
+            _settingsApplicator = settingsApplicator;
+            _gameScenesManager = gameScenesManager;
+            _config = config;
+            _logger = logger;
+        }
 
         public void Initialize()
         {
@@ -39,7 +48,6 @@ namespace QuickMirrorToggle
             _logger.Info($"Setting mirror to {state}");
             var settings = _settingsManager.settings;
             settings.quality.mirror = state;
-            //await SettingsIO.SaveAsync(_fileStorage, settings);
             _settingsManager.settings = settings;
             _settingsApplicator.ApplyGraphicSettings(settings, SceneType.Menu);
             _settingsApplicator.ApplyGraphicSettings(settings, SceneType.Game);
@@ -48,6 +56,7 @@ namespace QuickMirrorToggle
         public void Dispose()
         {
             _config.OnChanged -= Config_OnChanged;
+            _gameScenesManager.transitionDidFinishEvent -= GameScenesManager_transitionDidFinishEvent;
         }
     }
 }

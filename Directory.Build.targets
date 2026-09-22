@@ -4,8 +4,8 @@
 	<!-- Target for copying DLLs to Plugins folder -->
 	<Target Name="CopyToPlugins" AfterTargets="Build">
 		<PropertyGroup>
-			<PluginsDirectory>$(BeatSaberDir)\Plugins</PluginsDirectory>
-			<PendingPluginsDirectory>$(BeatSaberDir)\IPA\Pending\Plugins</PendingPluginsDirectory>
+			<PluginsDirectory>$(GameDirectory)\Plugins</PluginsDirectory>
+			<PendingPluginsDirectory>$(GameDirectory)\IPA\Pending\Plugins</PendingPluginsDirectory>
 			<OutputAssemblyName>$(OutputPath)$(AssemblyName)</OutputAssemblyName>
 		</PropertyGroup>
 		
@@ -55,8 +55,8 @@
 	<Target Name="CopyDllToReleaseDirectory" AfterTargets="CopyToPlugins" Condition="('$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release Final') And '$(DisableReleaseCopy)' != 'true'">
 		<PropertyGroup>
 			<DestinationRoot>G:\WebStatic\dirlist\SelfReleases\Build</DestinationRoot>
-			<BeatSaberDirName>$([System.IO.Path]::GetFileName($(BeatSaberDir)))</BeatSaberDirName>
-			<DestinationDirectory>$(DestinationRoot)\$(BeatSaberDirName)\$(MSBuildProjectName)</DestinationDirectory>
+			<GameDirectoryName>$([System.IO.Path]::GetFileName($(GameDirectory)))</GameDirectoryName>
+			<DestinationDirectory>$(DestinationRoot)\$(GameDirectoryName)\$(MSBuildProjectName)</DestinationDirectory>
 			<OutputAssemblyName>$(OutputPath)$(AssemblyName)</OutputAssemblyName>
 			<BuildTargetDestinationFile>$(DestinationDirectory)\BuildTarget.txt</BuildTargetDestinationFile>
 		</PropertyGroup>
@@ -66,14 +66,14 @@
 		<Message Text="Copying '$(OutputAssemblyName).dll' -> '$(DestinationDirectory)\$(AssemblyName).dll'" Importance="high" />
 		<Copy SourceFiles="$(OutputAssemblyName).dll" DestinationFolder="$(DestinationDirectory)" />
 		
-		<WriteLinesToFile File="$(BuildTargetDestinationFile)" Lines="$(BeatSaberDir)" Overwrite="true" />
+		<WriteLinesToFile File="$(BuildTargetDestinationFile)" Lines="$(GameDirectory)" Overwrite="true" />
 	</Target>
 
 	<!-- Target for Release Final configuration -->
 	<Target Name="CopyDllToReleaseFinalDirectory" AfterTargets="CopyToPlugins" Condition="'$(Configuration)' == 'Release Final'">
 		<PropertyGroup>
 			<FinalDestinationRoot>G:\WebStatic\dirlist\SelfReleases\Beat Saber</FinalDestinationRoot>
-			<FinalDestinationDirectory>$(FinalDestinationRoot) $(BeatSaberDirName)</FinalDestinationDirectory>
+			<FinalDestinationDirectory>$(FinalDestinationRoot) $(GameDirectoryName)</FinalDestinationDirectory>
 			<FinalOutputAssemblyName>$(OutputPath)$(AssemblyName)</FinalOutputAssemblyName>
 		</PropertyGroup>
 

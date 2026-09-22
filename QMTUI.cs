@@ -23,13 +23,13 @@ namespace QuickMirrorToggle
         [UIValue("qmt-mirror-setting-options")]
         private readonly string[] _mirrorSettings = new string[] { "Low", "Medium", "High" };
 
-        [Inject] private readonly QMTConfig _config;
-        [Inject] private readonly SiraLog _logger;
+        [Inject] private QMTConfig _config { get; set; }
+        [Inject] private SiraLog _logger { get; set; }
         private string _qmtText = "Disable Mirror";
         private bool _qmtToggleValue = false;
 
         [UIComponent("qmt-root")]
-        private RectTransform _qmtRectTransform;
+        private RectTransform _qmtRectTransform { get; set; }
 
         [UIValue("qmt-toggle-text")]
         public string QMTText
