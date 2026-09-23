@@ -1,58 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Project>
-	<!-- Target for copying DLLs to Plugins folder -->
-	<Target Name="CopyToPlugins" AfterTargets="Build">
-		<PropertyGroup>
-			<PluginsDirectory>$(GameDirectory)\Plugins</PluginsDirectory>
-			<PendingPluginsDirectory>$(GameDirectory)\IPA\Pending\Plugins</PendingPluginsDirectory>
-			<OutputAssemblyName>$(OutputPath)$(AssemblyName)</OutputAssemblyName>
-		</PropertyGroup>
-		
-		<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-			<DebugPdbFile>$(OutputPath)$(AssemblyName).pdb</DebugPdbFile>
-		</PropertyGroup>
-		
-		<PropertyGroup Condition="'$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release Final'">
-			<ReleasePdbFile>$(OutputPath)$(AssemblyName).pdb</ReleasePdbFile>
-		</PropertyGroup>
-
-		<Message Importance="High" Text="Copying '$(OutputAssemblyName).dll' -> '$(PluginsDirectory)'" Condition="'$(Configuration)' == 'Debug'" />
-		
-		<Copy Condition="'$(Configuration)' == 'Debug'"
-			  SourceFiles="$(OutputAssemblyName).dll;$(DebugPdbFile)"
-			  DestinationFolder="$(PluginsDirectory)"
-			  ContinueOnError="false"/>
-
-		<Message Importance="High" Text="Copying '$(OutputAssemblyName).dll' -> '$(PluginsDirectory)'" Condition="'$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release Final'" />
-		<Copy Condition="'$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release Final'"
-			  SourceFiles="$(OutputAssemblyName).dll"
-			  DestinationFolder="$(PluginsDirectory)"
-			  ContinueOnError="false"/>
-		
-		<Error Condition="!Exists('$(PluginsDirectory)\$(AssemblyName).dll') And !Exists('$(PluginsDirectory)\$(AssemblyName).pdb')"
-			  Text="Copying to Plugins folder failed. Copying to Pending Plugins folder instead."/>
-
-		<Message Importance="High" Text="Copying '$(OutputAssemblyName).dll' -> '$(PendingPluginsDirectory)'" Condition="'$(Configuration)' == 'Debug'" />
-		<Copy Condition="'$(Configuration)' == 'Debug'"
-			  SourceFiles="$(OutputAssemblyName).dll;$(DebugPdbFile)"
-			  DestinationFolder="$(PendingPluginsDirectory)"
-			  ContinueOnError="false"/>
-
-		<Message Importance="High" Text="Copying '$(OutputAssemblyName).dll' -> '$(PendingPluginsDirectory)'" Condition="'$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release Final'" />
-		<Copy Condition="'$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release Final'"
-			  SourceFiles="$(OutputAssemblyName).dll;$(ReleasePdbFile)"
-			  DestinationFolder="$(PendingPluginsDirectory)"
-			  ContinueOnError="false"/>
-		
-		<Error Condition="!Exists('$(PendingPluginsDirectory)\$(AssemblyName).dll') And !Exists('$(PendingPluginsDirectory)\$(AssemblyName).pdb')"
-			  Text="Copying to Pending Plugins folder failed. Please check the build output for more information."/>
-		
-		<Message Importance="High" Text="Beat Saber is running. Please restart the game for changes to be applied." Condition="!Exists('$(PluginsDirectory)\$(AssemblyName).dll') And !Exists('$(PluginsDirectory)\$(AssemblyName).pdb')" />
-	</Target>
 	
 	<!-- Target for Release configuration -->
-	<Target Name="CopyDllToReleaseDirectory" AfterTargets="CopyToPlugins" Condition="('$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release Final') And '$(DisableReleaseCopy)' != 'true'">
+	<Target Name="CopyDllToReleaseDirectory" AfterTargets="Build" Condition="('$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release Final') And '$(EnableReleaseCopy)' == 'true'">
 		<PropertyGroup>
 			<DestinationRoot>G:\WebStatic\dirlist\SelfReleases\Build</DestinationRoot>
 			<GameDirectoryName>$([System.IO.Path]::GetFileName($(GameDirectory)))</GameDirectoryName>
@@ -70,7 +21,7 @@
 	</Target>
 
 	<!-- Target for Release Final configuration -->
-	<Target Name="CopyDllToReleaseFinalDirectory" AfterTargets="CopyToPlugins" Condition="'$(Configuration)' == 'Release Final'">
+	<Target Name="CopyDllToReleaseFinalDirectory" AfterTargets="Build" Condition="'$(Configuration)' == 'Release Final' And '$(EnableReleaseCopy)' == 'true'">
 		<PropertyGroup>
 			<FinalDestinationRoot>G:\WebStatic\dirlist\SelfReleases\Beat Saber</FinalDestinationRoot>
 			<FinalDestinationDirectory>$(FinalDestinationRoot) $(GameDirectoryName)</FinalDestinationDirectory>
