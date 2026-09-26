@@ -104,5 +104,11 @@ namespace QuickMirrorToggle
                     break;
             }
         }
+
+        protected override void OnDestroy()
+        {
+            if (_config != null) _config.OnChanged -= Config_OnChanged;
+            base.OnDestroy();
+        }
     }
 }
